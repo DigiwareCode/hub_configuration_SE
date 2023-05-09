@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hub_config/src/business_logic/services/http_hub_repository.dart';
 
 import 'package:hub_config/src/provider_manager/hub_manager.dart';
+import 'package:hub_config/src/views/hub_connection_screen.dart';
+import 'package:hub_config/src/views/hub_connection_success_screen.dart';
+import 'package:hub_config/src/views/serial_number_scan_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -22,7 +26,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Hub App',
       theme: ThemeData(
-        primarySwatch: Colors.cyan,
+        primarySwatch: Colors.blueGrey
+        ,
       ),
       home: const MyHomePage(title: 'Hub Configuration'),
     );
@@ -41,17 +46,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   late HubManager hubManager;
 
-/*
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    hubManager = Provider.of<HubManager>(context);
-  }*/
-
   @override
   Widget build(BuildContext context) {
-    final hubManager = Provider.of<HubManager>(context);
-
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -62,16 +58,17 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             ElevatedButton(
               onPressed: () {
-                hubManager.scanSerialNumber();
+                Provider.of<HubManager>(context, listen: false)
+                    .scanSerialNumber();
+
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const SerialNumberScanScreen()));
               },
               child: const Text('Scan QR'),
             ),
-            ElevatedButton(
-              onPressed: () {
-                hubManager.quitHubConnection();
-              },
-              child: const Text('RESET'),
-            ),
+
           ],
         ),
       ),

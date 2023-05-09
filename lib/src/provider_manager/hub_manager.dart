@@ -1,6 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:chopper/chopper.dart';
+import 'package:chopper/chopper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hub_config/src/business_logic/services/hub_repository.dart';
 
@@ -20,7 +23,6 @@ class HubManager with ChangeNotifier {
 
   String get wifiSSID => _wifiSSID;
 
-
   String _wifiSSID = '';
 
   bool get onScanSerialNumber => _onScanSerialNumber;
@@ -38,7 +40,6 @@ class HubManager with ChangeNotifier {
     } else {
       final response = await _hubRepository.findBySerialNumber(hubSerialNumber);
       if (!response.isSuccessful()) return;
-
     }
   }
 
@@ -124,10 +125,11 @@ class HubManager with ChangeNotifier {
   Future<Result> connectHub(String ssid, String password) async {
     final result = await _hubRepository.configureWifi(
         wifiName: ssid, wifiPassword: password);
+
     if (result.isSuccessful()) {
-      //Wait until the device is connected to internet
       Timer.periodic(const Duration(milliseconds: 10), (timer) async {
         final isConnectedToInternet = await verifyConnection();
+
         if (isConnectedToInternet) {
           _onSetHubWifi = false;
           notifyListeners();

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hub_config/src/views/rounded_button.dart';
 import 'package:provider/provider.dart';
 import '../provider_manager/hub_manager.dart';
+import 'hub_connection_success_screen.dart';
 import 'input_field.dart';
 import 'messenger.dart';
 import 'skeleton.dart';
@@ -109,6 +110,7 @@ class _HubWifiSetScreenState extends State<HubWifiSetScreen> {
                 onPressed: () {
                   Provider.of<HubManager>(context, listen: false)
                       .quitHubWifiSetting();
+                  Navigator.pop(context);
                 },
                 height: 60,
                 radius: 30,
@@ -130,10 +132,23 @@ class _HubWifiSetScreenState extends State<HubWifiSetScreen> {
         _ssidController.text,
         _passwordController.text,
       );
+
       Messenger.closeLoading(context);
+      navigateToHubConnectionSuccessPage(context);
+
       if (!result.isSuccessful()) {
         Messenger.showErrorWithCode(context, result.errorCode!);
       }
     }
+  }
+
+  Future<void> navigateToHubConnectionSuccessPage(BuildContext context) async {
+    await Future.microtask(() {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => const HubConnectionSuccessPage()),
+      );
+    });
   }
 }

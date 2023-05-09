@@ -7,5 +7,8 @@ abstract class HubRepository {
   Future<Result<void>> configure(Hub hub);
 
   Future<Result> configureWifi(
-      {required String wifiName, required String wifiPassword});
+      {
+        required String wifiName,
+        required String wifiPassword,
+        });
 }

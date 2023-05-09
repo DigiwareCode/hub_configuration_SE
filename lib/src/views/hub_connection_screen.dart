@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
+import 'package:hub_config/src/views/scan_wifi_screen.dart';
 import 'package:network_info_plus/network_info_plus.dart';
 import 'package:provider/provider.dart';
 
@@ -44,18 +45,6 @@ class _HubConnectionScreenState extends State<HubConnectionScreen> {
         title: "Connect to your hub",
         subtitle: "Open your wifi setting and connect to Access point",
         children: [
-          Center(
-            child: Column(
-              children: [
-                Image.asset(
-                  "connectHubIllustration.png",
-                  width: size.width * 0.8,
-                  height: size.height * 0.5,
-                ),
-                if (_waitingConnection) const Text("Wait for hub access point")
-              ],
-            ),
-          ),
           Column(
             children: [
               RoundedButton(
@@ -74,6 +63,7 @@ class _HubConnectionScreenState extends State<HubConnectionScreen> {
                 onPressed: () {
                   Provider.of<HubManager>(context, listen: false)
                       .quitHubConnection();
+                  Navigator.pop(context);
                 },
                 height: 60,
                 radius: 30,
@@ -97,6 +87,8 @@ class _HubConnectionScreenState extends State<HubConnectionScreen> {
         timer.cancel();
         Provider.of<HubManager>(context, listen: false).hasConnectedToHub();
         Messenger.showSuccess(context, 'Successfully connected to Senergy Hub');
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => ScanWifiScreen()));
       }
     });
   }

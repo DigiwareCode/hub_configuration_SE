@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:chopper/chopper.dart';
 import 'package:hub_config/src/business_logic/utils/api_utils.dart';
 
@@ -21,7 +23,9 @@ abstract class HubService extends ChopperService {
 
   @Get(path: '${ApiUtils.hubAddress}/setting', optionalBody: true)
   Future<Response> configureWifi(
-      @Query('ssid') String wifiName, @Query('password') String wifiPassword);
+      @Query('ssid') String wifiName,
+      @Query('password') String wifiPassword,
+      );
 
   static HubService getInstance() {
     if (_instance == null) {

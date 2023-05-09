@@ -5,6 +5,7 @@ import 'package:hub_config/src/views/skeleton.dart';
 import 'package:provider/provider.dart';
 
 import '../provider_manager/hub_manager.dart';
+import 'hub_wifi_set_screen.dart';
 import 'messenger.dart';
 
 class ScanWifiScreen extends StatefulWidget {
@@ -144,6 +145,7 @@ class _ScanWifiScreenState extends State<ScanWifiScreen> {
                 onPressed: () {
                   Provider.of<HubManager>(context, listen: false)
                       .quitScanWifi();
+                  Navigator.pop(context);
                 },
                 height: 60,
                 radius: 30,
@@ -159,5 +161,7 @@ class _ScanWifiScreenState extends State<ScanWifiScreen> {
 
   void _openPasswordEntry(String ssid) {
     Provider.of<HubManager>(context, listen: false).enterWifiPassword(ssid);
+    Navigator.push(context,
+    MaterialPageRoute(builder: (context) => HubWifiSetScreen()));
   }
 }

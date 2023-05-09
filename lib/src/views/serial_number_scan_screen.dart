@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import '../business_logic/models/session.dart';
 import '../provider_manager/app_state_manager.dart';
+import 'hub_connection_screen.dart';
 
 class SerialNumberScanScreen extends StatefulWidget {
   static MaterialPage page() {
@@ -30,7 +31,7 @@ class SerialNumberScanScreen extends StatefulWidget {
 class _SerialNumberScanScreenState extends State<SerialNumberScanScreen> {
   final _formKey = GlobalKey<FormState>();
   QRViewController? _controller;
-  int scanState = 0;
+  int scanState = 0; // 0: not yet scan; 1: error; 2: success
 
   @override
   void reassemble() {
@@ -49,12 +50,13 @@ class _SerialNumberScanScreenState extends State<SerialNumberScanScreen> {
         title: const Text("Scan QR"),
         leading: Session.instance.hubSerialNumber.isNotEmpty
             ? IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: () {
-                  Provider.of<HubManager>(context, listen: false)
-                      .quitSerialNumberScan();
-                },
-              )
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Provider.of<HubManager>(context, listen: false)
+                .quitSerialNumberScan();
+            Navigator.pop(context);
+          },
+        )
             : null,
       ),
       body: QRView(
@@ -79,18 +81,25 @@ class _SerialNumberScanScreenState extends State<SerialNumberScanScreen> {
     });
   }
 
+  @override
+  void dispose() {
+    _controller?.dispose();
+    super.dispose();
+  }
+
+
   void _verifySerialNumber(String serialNumber) async {
     if (scanState != 2) {
-      if (true) {
-        scanState = 2;
-        Provider.of<AppStateManager>(context, listen: false).initHubData();
-      }
-    }
+      //TODO : INSERT HERE THE CORRECT SERIAL NUMBER
+      bool isValidSerialNumber = (serialNumber == 'SEnergyM-001');
 
-    @override
-    void dispose() {
-      _controller?.dispose();
-      super.dispose();
+      if (isValidSerialNumber) {
+        scanState = 2;
+        Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => HubConnectionScreen()));
+      }
+      dispose();
     }
   }
 }

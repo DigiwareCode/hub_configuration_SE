@@ -22,9 +22,11 @@ class _$HubService extends HubService {
     final $url = 'http://192.168.4.1/setting';
     final $params = <String, dynamic>{
       'ssid': wifiName,
-      'password': wifiPassword
+      'password': wifiPassword,
+
     };
     final $request = Request('GET', $url, client.baseUrl, parameters: $params);
+
     return client.send<dynamic, dynamic>($request);
   }
 
@@ -32,11 +34,14 @@ class _$HubService extends HubService {
   Future<Response<dynamic>> findBySerialNumber(
       String serialNumber, String token) {
     final $url = 'http://192.168.1.84:8080/api/v1/hub/${serialNumber}';
+    /*
     final $headers = {
       'Authorization': token,
-    };
+    };*/
 
-    final $request = Request('GET', $url, client.baseUrl, headers: $headers);
+    //final $request = Request('GET', $url, client.baseUrl, headers: $headers);
+    final $request = Request('GET', $url, client.baseUrl);
+
     return client.send<dynamic, dynamic>($request);
   }
 
