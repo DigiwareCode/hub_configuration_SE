@@ -50,13 +50,13 @@ class _SerialNumberScanScreenState extends State<SerialNumberScanScreen> {
         title: const Text("Scan QR"),
         leading: Session.instance.hubSerialNumber.isNotEmpty
             ? IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Provider.of<HubManager>(context, listen: false)
-                .quitSerialNumberScan();
-            Navigator.pop(context);
-          },
-        )
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () {
+                  Provider.of<HubManager>(context, listen: false)
+                      .quitSerialNumberScan();
+                  Navigator.pop(context);
+                },
+              )
             : null,
       ),
       body: QRView(
@@ -87,7 +87,6 @@ class _SerialNumberScanScreenState extends State<SerialNumberScanScreen> {
     super.dispose();
   }
 
-
   void _verifySerialNumber(String serialNumber) async {
     if (scanState != 2) {
       //TODO : INSERT HERE THE CORRECT SERIAL NUMBER
@@ -97,7 +96,8 @@ class _SerialNumberScanScreenState extends State<SerialNumberScanScreen> {
         scanState = 2;
         Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => HubConnectionScreen()));
+            MaterialPageRoute(
+                builder: (context) => const HubConnectionScreen()));
       }
       dispose();
     }
