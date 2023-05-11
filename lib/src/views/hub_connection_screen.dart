@@ -86,7 +86,7 @@ class _HubConnectionScreenState extends State<HubConnectionScreen> {
       if (gatewayIP == ApiUtils.hubIP) {
         timer.cancel();
         Provider.of<HubManager>(context, listen: false).hasConnectedToHub();
-        Messenger.showSuccess(context, 'Successfully connected to Senergy Hub');
+        //Messenger.showSuccess(context, 'Successfully connected to Senergy Hub');
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => ScanWifiScreen()));
       }

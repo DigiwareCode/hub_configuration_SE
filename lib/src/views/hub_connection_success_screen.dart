@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../business_logic/models/input_data.dart';
+
 class HubConnectionSuccessPage extends StatelessWidget {
-  const HubConnectionSuccessPage({super.key});
+  const HubConnectionSuccessPage({  key});
 
   @override
   Widget build(BuildContext context) {
@@ -44,11 +46,8 @@ class HubConnectionSuccessPage extends StatelessWidget {
                 color: Colors.black87,
               ),
             ),
-
-
           ],
         ),
-
       ),
     );
   }

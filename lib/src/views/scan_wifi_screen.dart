@@ -162,6 +162,6 @@ class _ScanWifiScreenState extends State<ScanWifiScreen> {
   void _openPasswordEntry(String ssid) {
     Provider.of<HubManager>(context, listen: false).enterWifiPassword(ssid);
     Navigator.push(context,
-    MaterialPageRoute(builder: (context) => HubWifiSetScreen()));
+        MaterialPageRoute(builder: (context) => const HubWifiSetScreen()));
   }
 }

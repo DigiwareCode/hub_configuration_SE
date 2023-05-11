@@ -27,6 +27,8 @@ class _HubWifiSetScreenState extends State<HubWifiSetScreen> {
   final _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
 
+
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
