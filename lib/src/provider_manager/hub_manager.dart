@@ -2,13 +2,42 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:hub_config/src/business_logic/models/hub.dart';
+import 'package:hub_config/src/business_logic/models/input_data.dart';
+import 'package:hub_config/src/business_logic/models/wifi.dart';
 import 'package:hub_config/src/business_logic/services/hub_repository.dart';
 
 import '../business_logic/models/session.dart';
 import '../business_logic/utils/result.dart';
 import '../views/wifi_scanner.dart';
 
-class HubManager with ChangeNotifier {
+class HubManager with ChangeNotifier implements InputDataProvider {
+  final Hub _hub = Hub();
+
+
+  // final InputData _inputData = InputData.myInput();
+
+  InputData inputData = InputData(
+      'abc123',
+      '12345',
+      '192.168.0.1',
+      '13.38.208.129',
+      1883,
+      '/provision',
+      'yk5xkafkvznfsunjnitv',
+      '7i4dpjxu5cesacxwjw3v',
+      'MQTT_BASIC',
+      'successTopicValue',
+      'v1/devices/me/telemetry',
+      '',
+      ''
+  );
+
+  @override
+  InputData getInputData() {
+    return inputData;
+  }
+
   final HubRepository _hubRepository;
 
   HubManager(this._hubRepository);
@@ -119,6 +148,10 @@ class HubManager with ChangeNotifier {
     }
   }
 
+  Hub getHub() {
+    return _hub;
+  }
+
   Future<Result> connectHub(String ssid, String password) async {
     final result = await _hubRepository.configureWifi(
         wifiName: ssid, wifiPassword: password);
@@ -136,4 +169,12 @@ class HubManager with ChangeNotifier {
     }
     return result;
   }
+
+
+
+
+
+
+
 }
+

@@ -1,6 +1,5 @@
-import 'dart:convert';
-
 import 'package:chopper/chopper.dart';
+import 'package:hub_config/src/business_logic/models/input_data.dart';
 import 'package:hub_config/src/business_logic/utils/api_utils.dart';
 
 part 'hub_service.chopper.dart';
@@ -12,20 +11,21 @@ abstract class HubService extends ChopperService {
   @Put(path: '${ApiUtils.endPoint}/hub/configure')
   Future<Response> configureHub(
     @Body() Map<String, dynamic> data,
-    @Header('Authorization') String token,
+    // @Header('Authorization') String token,
   );
 
   @Get(path: '${ApiUtils.endPoint}/hub/{serialNumber}', optionalBody: true)
   Future<Response> findBySerialNumber(
     @Path('serialNumber') String serialNumber,
-    @Header('Authorization') String token,
+    //  @Header('Authorization') String token,
   );
 
-  @Get(path: '${ApiUtils.hubAddress}/setting', optionalBody: true)
+  @Post(path: '${ApiUtils.hubAddress}/setting', optionalBody: true)
   Future<Response> configureWifi(
-      @Query('ssid') String wifiName,
-      @Query('password') String wifiPassword,
-      );
+    @Query('ssid') String wifiName,
+    @Query('password') String wifiPassword,
+    @Body() InputData inputData,
+  );
 
   static HubService getInstance() {
     if (_instance == null) {

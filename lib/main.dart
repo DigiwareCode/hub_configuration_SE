@@ -3,11 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:hub_config/src/business_logic/services/http_hub_repository.dart';
 
 import 'package:hub_config/src/provider_manager/hub_manager.dart';
+import 'package:hub_config/src/views/scan_wifi_screen.dart';
 
 import 'package:hub_config/src/views/serial_number_scan_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hub_config/src/business_logic/models/input_data.dart';
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(ChangeNotifierProvider<HubManager>(
@@ -24,6 +26,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Hub App',
       theme: ThemeData(
         primarySwatch: Colors.blueGrey,
@@ -45,22 +48,9 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final _formKey = GlobalKey<FormState>();
 
-  InputData inputData = InputData(
-    'abc123',
-    '12345',
-    '192.168.0.1',
-    'mqtt.example.com',
-    1883,
-    'provisionTopicValue',
-    'provisionDeviceKeyValue',
-    'provisionDeviceSecretValue',
-    'MQTT_BASIC',
-    'successTopicValue',
-    'dataTopicValue',
-  );
-
   @override
   Widget build(BuildContext context) {
+    InputData inputData = Provider.of<HubManager>(context).inputData;
     return Scaffold(
         appBar: AppBar(
           title: const Text('Initial Input Screen'),
@@ -72,6 +62,23 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                TextFormField(
+                  onChanged: (value) {
+                    setState(() {
+                      inputData.hubIP = value;
+                    });
+                  },
+                  decoration: const InputDecoration(
+                    hintText: '192.168.0.1',
+                    labelText: 'Device Hotspot IP',
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter device hotspot ip';
+                    }
+                    return null;
+                  },
+                ),
                 TextFormField(
                   initialValue: inputData.broker,
                   onChanged: (value) {
@@ -91,6 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   },
                 ),
                 TextFormField(
+                  initialValue: '1883',
                   onChanged: (value) {
                     setState(() {
                       inputData.port = int.tryParse(value) ?? 0;
@@ -98,7 +106,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   },
                   decoration: const InputDecoration(
                     labelText: 'Port',
-                    hintText: 'MQTT PORT : default 1883',
                   ),
                   keyboardType: TextInputType.number,
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
@@ -149,6 +156,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   },
                 ),
                 TextFormField(
+                  initialValue: inputData.provisionDeviceKey,
                   onChanged: (value) {
                     setState(() {
                       inputData.provisionDeviceKey = value;
@@ -165,6 +173,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   },
                 ),
                 TextFormField(
+                  initialValue: inputData.provisionDeviceSecret,
                   onChanged: (value) {
                     setState(() {
                       inputData.provisionDeviceSecret = value;
@@ -181,6 +190,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   },
                 ),
                 TextFormField(
+                  initialValue: inputData.credentialsType,
                   onChanged: (value) {
                     setState(() {
                       inputData.credentialsType = value;
@@ -197,59 +207,16 @@ class _MyHomePageState extends State<MyHomePage> {
                     return null;
                   },
                 ),
-                TextFormField(
-                  onChanged: (value) {
-                    setState(() {
-                      inputData.successTopic = value;
-                    });
-                  },
-                  decoration: const InputDecoration(
-                    labelText: 'Success Topic',
-                    hintText: '{SERIAL_NUMBER}/success',
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter success topic';
-                    }
-                    return null;
-                  },
-                ),
                 const SizedBox(height: 16.0),
                 Center(
                   child: ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text('your data'),
-                              content: Text('Broker :${inputData.broker},\n'
-                                  'Port: ${inputData.port}\n'
-                                  'DataTopic: ${inputData.dataTopic}\n'
-                                  'ProvisionTopic: ${inputData.provisionTopic}\n'
-                                  'Provision Device Key: ${inputData.provisionDeviceKey}\n'
-                                  'Provision Device Secret: ${inputData.provisionDeviceSecret}\n'
-                                  'Credentials Type: ${inputData.credentialsType}\n'
-                                  'Success Topic: ${inputData.successTopic}'),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                        const SerialNumberScanScreen(),
-                                      ),
-                                    );
-                                  },
-                                  child: const Text('OK'),
-                                ),
-                              ],
-                            );
-                          },
-                        );
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    SerialNumberScanScreen()));
                       }
                     },
                     child: const Text('SUBMIT'),

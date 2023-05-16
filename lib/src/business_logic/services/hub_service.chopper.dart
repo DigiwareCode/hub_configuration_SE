@@ -17,45 +17,48 @@ class _$HubService extends HubService {
   final definitionType = HubService;
 
   @override
+  Future<Response<dynamic>> configureHub(Map<String, dynamic> data) {
+    final $url = 'http://192.168.1.84:8080/hub/configure';
+    final $body = data;
+    final $request = Request(
+      'PUT',
+      $url,
+      client.baseUrl,
+      body: $body,
+    );
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> findBySerialNumber(String serialNumber) {
+    final $url = 'http://192.168.1.84:8080/hub/${serialNumber}';
+    final $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+    );
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
   Future<Response<dynamic>> configureWifi(
-      String wifiName, String wifiPassword) {
+    String wifiName,
+    String wifiPassword,
+    InputData inputData,
+  ) {
     final $url = 'http://192.168.4.1/setting';
     final $params = <String, dynamic>{
       'ssid': wifiName,
       'password': wifiPassword,
-
     };
-    final $request = Request('GET', $url, client.baseUrl, parameters: $params);
-
-    return client.send<dynamic, dynamic>($request);
-  }
-
-  @override
-  Future<Response<dynamic>> findBySerialNumber(
-      String serialNumber, String token) {
-    final $url = 'http://192.168.1.84:8080/api/v1/hub/${serialNumber}';
-    /*
-    final $headers = {
-      'Authorization': token,
-    };*/
-
-    //final $request = Request('GET', $url, client.baseUrl, headers: $headers);
-    final $request = Request('GET', $url, client.baseUrl);
-
-    return client.send<dynamic, dynamic>($request);
-  }
-
-  @override
-  Future<Response<dynamic>> configureHub(
-      Map<String, dynamic> data, String token) {
-    final $url = 'http://192.168.1.84:8080/api/v1/hub/configure';
-    final $headers = {
-      'Authorization': token,
-    };
-
-    final $body = data;
-    final $request =
-        Request('PUT', $url, client.baseUrl, body: $body, headers: $headers);
+    final $body = inputData;
+    final $request = Request(
+      'POST',
+      $url,
+      client.baseUrl,
+      body: $body,
+      parameters: $params,
+    );
     return client.send<dynamic, dynamic>($request);
   }
 }

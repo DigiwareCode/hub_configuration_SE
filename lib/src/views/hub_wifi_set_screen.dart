@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hub_config/src/business_logic/models/input_data.dart';
 import 'package:hub_config/src/views/rounded_button.dart';
 import 'package:provider/provider.dart';
 import '../provider_manager/hub_manager.dart';
@@ -27,8 +28,6 @@ class _HubWifiSetScreenState extends State<HubWifiSetScreen> {
   final _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
 
-
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -38,6 +37,7 @@ class _HubWifiSetScreenState extends State<HubWifiSetScreen> {
 
   @override
   Widget build(BuildContext context) {
+    HubManager myHubManager = Provider.of<HubManager>(context, listen: false);
     final size = MediaQuery.of(context).size;
     return Scaffold(
       body: Skeleton(
@@ -99,7 +99,48 @@ class _HubWifiSetScreenState extends State<HubWifiSetScreen> {
           Column(
             children: [
               RoundedButton(
-                onPressed: _connectHub,
+                onPressed: () {
+                  _connectHub();
+                 // InputData inputData = myHubManager.inputData;
+/*
+                  AlertDialog(
+                    title: const Text('Your data'),
+                    content: SingleChildScrollView(
+                      child: ListBody(
+                        children: <Widget>[
+                          Text('Device Hotspot IP:${inputData.hubIP} ,\n'),
+                          Text('Broker :${inputData.broker},\n'),
+                          Text('Port: ${inputData.port}\n'),
+                          Text('DataTopic: ${inputData.dataTopic}\n'),
+                          Text('ProvisionTopic: ${inputData.provisionTopic}\n'),
+                          Text(
+                              'Provision Device Key: ${inputData.provisionDeviceKey}\n'),
+                          Text(
+                              'Provision Device Secret: ${inputData.provisionDeviceSecret}\n'),
+                          Text(
+                              'Credentials Type: ${inputData.credentialsType}\n'),
+                          Text('SSID: ${inputData.ssid}\n'),
+                          Text('Password: ${inputData.password}')
+                        ],
+                      ),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const HubConnectionSuccessPage(),
+                            ),
+                          );
+                        },
+                        child: const Text('OK'),
+                      ),
+                    ],
+                  );*/
+                },
                 height: 60,
                 radius: 30,
                 text: "Connect",
@@ -110,8 +151,8 @@ class _HubWifiSetScreenState extends State<HubWifiSetScreen> {
               ),
               RoundedButton(
                 onPressed: () {
-                  Provider.of<HubManager>(context, listen: false)
-                      .quitHubWifiSetting();
+                  myHubManager.quitHubWifiSetting();
+
                   Navigator.pop(context);
                 },
                 height: 60,
@@ -127,13 +168,16 @@ class _HubWifiSetScreenState extends State<HubWifiSetScreen> {
   }
 
   void _connectHub() async {
+    HubManager myHubManager = Provider.of<HubManager>(context, listen: false);
     if (_formKey.currentState!.validate()) {
       Messenger.showLoading(context);
-      final result =
-          await Provider.of<HubManager>(context, listen: false).connectHub(
+
+      final result = await myHubManager.connectHub(
         _ssidController.text,
         _passwordController.text,
       );
+      myHubManager.inputData.ssid = _ssidController.text;
+      myHubManager.inputData.password = _passwordController.text;
 
       Messenger.closeLoading(context);
       navigateToHubConnectionSuccessPage(context);

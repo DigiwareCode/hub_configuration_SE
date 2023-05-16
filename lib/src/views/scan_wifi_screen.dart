@@ -99,12 +99,13 @@ class _ScanWifiScreenState extends State<ScanWifiScreen> {
           _wifiNetworks.isEmpty
               ? Padding(
                   padding: EdgeInsets.only(top: size.height * 0.1),
+                  /*
                   child: Center(
                       child: Image.asset(
                     "nowifi.png",
                     width: size.width * 0.8,
                     height: size.height * 0.3,
-                  )),
+                  )),*/
                 )
               : Expanded(
                   child: ListView.builder(

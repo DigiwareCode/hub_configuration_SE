@@ -3,7 +3,10 @@ class Session {
 
   String hubSerialNumber = '';
   String token = '';
+  /*
+  String ssid;
+  String password;
+*/
 
   Session._privateConstructor();
-
 }

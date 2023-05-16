@@ -6,7 +6,6 @@ import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:provider/provider.dart';
 
 import '../business_logic/models/session.dart';
-import '../provider_manager/app_state_manager.dart';
 import 'hub_connection_screen.dart';
 
 class SerialNumberScanScreen extends StatefulWidget {
@@ -89,8 +88,12 @@ class _SerialNumberScanScreenState extends State<SerialNumberScanScreen> {
 
   void _verifySerialNumber(String serialNumber) async {
     if (scanState != 2) {
-      //TODO : INSERT HERE THE CORRECT SERIAL NUMBER
-      bool isValidSerialNumber = (serialNumber == 'SEnergyM-001');
+      bool isValidSerialNumber = (serialNumber != null);
+
+      HubManager myH = Provider.of<HubManager>(context,listen: false);
+      myH.inputData.hubSerialNumber = serialNumber;
+      myH.inputData.clientID = serialNumber;
+      myH.inputData.successTopic = '$serialNumber/success';
 
       if (isValidSerialNumber) {
         scanState = 2;
